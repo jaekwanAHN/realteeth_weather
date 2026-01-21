@@ -1,11 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getGeoLocation } from '@/entities/location/api/geocode';
-// 1. 날씨 API 함수 import
-import {
-  getCurrentWeather,
-  getHourlyForecast,
-} from '@/entities/weather/api/weather';
 import { HourlyForecast } from '@/widgets/WeatherForcast/ui/HourlyForecast';
+import { getDetailData } from '@/views/detail/api/getDetailData';
 
 interface DetailPageProps {
   params: Promise<{
@@ -27,18 +23,17 @@ export default async function DetailPage({ params }: DetailPageProps) {
     return <div>좌표를 찾을 수 없습니다.</div>; // 간단한 에러 처리
   }
 
-  // 2. 날씨 데이터 구하기 (Weather API) -> 좌표가 있어야 호출 가능
-  // const weatherData = await getCurrentWeather({
-  //   lat: geoData.lat,
-  //   lon: geoData.lon,
-  // });
-
-  const [weatherData, forecastData] = await Promise.all([
-    getCurrentWeather({ lat: geoData.lat, lon: geoData.lon }),
-    getHourlyForecast({ lat: geoData.lat, lon: geoData.lon }),
-  ]);
+  // const [weatherData, forecastData] = await Promise.all([
+  //   getCurrentWeather({ lat: geoData.lat, lon: geoData.lon }),
+  //   getHourlyForecast({ lat: geoData.lat, lon: geoData.lon }),
+  // ]);
+  const { weather: weatherData, forecast: forecastData } = await getDetailData(
+    geoData.lat,
+    geoData.lon
+  );
 
   // 3. 서버 로그 확인 (데이터 구조 파악용)
+  console.log(weatherData);
   console.log(`\n--- [Weather Data] ---`);
   console.log(`Temp : ${weatherData?.main.temp}°C`);
   console.log(`Desc : ${weatherData?.weather[0].description}`);

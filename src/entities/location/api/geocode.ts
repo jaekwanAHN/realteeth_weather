@@ -31,3 +31,30 @@ export const getGeoLocation = async (
     throw new Error('위치 정보를 찾을 수 없습니다.');
   }
 };
+
+export const getReverseGeoLocation = async (
+  lat: number,
+  lon: number
+): Promise<string | null> => {
+  try {
+    const response = await weatherApi.get<GeoLocation[]>('/geo/1.0/reverse', {
+      params: {
+        lat,
+        lon,
+        limit: 1, // 1개만 요청
+      },
+    });
+    console.log(`response.data`, response.data);
+
+    if (response.data && response.data.length > 0) {
+      // 한국어 이름(local_names.ko)이 있으면 그거 쓰고, 없으면 영어 이름(name) 사용
+      const data = response.data[0];
+      return data.local_names?.ko || data.name;
+    }
+
+    return null;
+  } catch (error) {
+    console.error('Reverse Geocoding Error:', error);
+    return null;
+  }
+};
