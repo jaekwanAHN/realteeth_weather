@@ -1,6 +1,7 @@
 import { CurrentLocationButton } from '@/features/current-location/ui/CurrentLocationButton';
 import { MyLocationWeather } from '@/features/current-location/ui/MyLocationWeather';
 import { SearchSection } from '@/widgets/SearchSection/ui/SearchSection';
+import { FavoriteList } from '@/widgets/FavoriteList/ui/FavoriteList';
 
 export default function Home() {
   return (
@@ -13,6 +14,8 @@ export default function Home() {
       <SearchSection />
 
       <MyLocationWeather />
+
+      <FavoriteList />
     </main>
   );
 }
