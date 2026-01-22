@@ -18,7 +18,7 @@ export default async function DetailPage({ params }: DetailPageProps) {
   if (!locationName) return notFound();
 
   // 1. 좌표 구하기 (Geocoding)
-  const searchKeyword = locationName.split('-').pop() || locationName;
+  const searchKeyword = locationName.replaceAll('-', ' ');
   const geoData = await getGeoLocation(searchKeyword);
 
   if (!geoData) {
