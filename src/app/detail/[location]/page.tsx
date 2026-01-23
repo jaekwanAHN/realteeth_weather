@@ -24,7 +24,9 @@ export default async function DetailPage({ params }: DetailPageProps) {
   if (!geoData) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-8">
-        <div className="font-bold text-red-500">좌표를 찾을 수 없습니다.</div>
+        <div className="font-bold text-red-500">
+          해당 장소의 정보가 제공되지 않습니다.
+        </div>
       </main>
     );
   }
