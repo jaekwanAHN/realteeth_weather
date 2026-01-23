@@ -7,7 +7,9 @@ import {
   useFavoriteStore,
   FavoriteLocation,
 } from '@/entities/favorite/model/store';
-import { getSimpleWeather } from '@/entities/weather/api/getSimpleWeather'; // 방금 만든 API
+import { getSimpleWeather } from '@/entities/weather/api/getSimpleWeather';
+
+import { getSimpleWeatherAction } from '@/entities/weather/api/weatherAction';
 
 interface Props {
   item: FavoriteLocation;
@@ -32,13 +34,16 @@ export const FavoriteItem = ({ item }: Props) => {
   // 컴포넌트가 마운트되면 날씨 데이터를 가져옴
   useEffect(() => {
     const fetchWeather = async () => {
-      const data = await getSimpleWeather(item.lat, item.lon);
-      if (data) {
+      // const data = await getSimpleWeather(item.lat, item.lon);
+
+      const result = await getSimpleWeatherAction(item.lat, item.lon);
+
+      if (result.success && result.data) {
         setWeather({
-          temp: data.temp,
-          min: data.temp_min,
-          max: data.temp_max,
-          icon: data.icon,
+          temp: result.data.temp,
+          min: result.data.temp_min,
+          max: result.data.temp_max,
+          icon: result.data.icon,
         });
       }
     };

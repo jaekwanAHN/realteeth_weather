@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { WeatherData } from '@/entities/weather/model/types';
 import { CurrentWeatherCard } from '@/widgets/CurrentWeather/ui/CurrentWeatherCard';
 import { getMyLocationWeather } from '../api/getWeatherAction';
+import { getCurrentWeatherAction } from '@/entities/weather/api/weatherAction';
 
 export const MyLocationWeather = () => {
   const [weather, setWeather] = useState<{
@@ -28,12 +29,13 @@ export const MyLocationWeather = () => {
           const { latitude, longitude } = position.coords;
 
           // 3. 서버 액션 호출 (날씨 + 지역명 가져오기)
-          const result = await getMyLocationWeather(latitude, longitude);
+          // const result = await getMyLocationWeather(latitude, longitude);
+          const result = await getCurrentWeatherAction(latitude, longitude);
 
-          if (result.weatherData) {
+          if (result.success && result.data) {
             setWeather({
-              data: result.weatherData,
-              name: result.locationName || result.weatherData.name,
+              data: result.data.weather,
+              name: result.data.weather.name,
             });
           } else {
             setError('날씨 정보를 불러오지 못했습니다.');

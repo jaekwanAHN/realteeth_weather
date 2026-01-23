@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import { getGeoLocation } from '@/entities/location/api/geocode';
 import { HourlyForecast } from '@/widgets/WeatherForcast/ui/HourlyForecast';
-import { getDetailData } from '@/views/detail/api/getDetailData';
+import { getCurrentWeatherAction } from '@/entities/weather/api/weatherAction';
 import { CurrentWeatherCard } from '@/widgets/CurrentWeather/ui/CurrentWeatherCard';
 import { FavoriteButton } from '@/features/toggle-favorite/ui/FavoriteButton';
 
@@ -50,10 +50,23 @@ export default async function DetailPage({
     );
   }
 
-  const { weather: weatherData, forecast: forecastData } = await getDetailData(
+  const { success, data } = await getCurrentWeatherAction(
     geoData.lat,
     geoData.lon
   );
+  if (!success || !data) {
+    return (
+      <main className="flex min-h-screen items-center justify-center p-8">
+        <div className="text-center">
+          <h2 className="mb-2 text-xl font-bold text-gray-500">
+            날씨 정보를 불러올 수 없습니다.
+          </h2>
+          <p className="text-gray-400">잠시 후 다시 시도해주세요.</p>
+        </div>
+      </main>
+    );
+  }
+  const { weather: weatherData, forecast: forecastData } = data;
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-blue-50 p-8">
