@@ -25,6 +25,15 @@ export const useFavoriteStore = create<FavoriteStore>()(
       addFavorite: (location) => {
         const { favorites } = get();
 
+        const isDuplicate = favorites.some(
+          (fav) => fav.lat === location.lat && fav.lon === location.lon
+        );
+
+        if (isDuplicate) {
+          return false; // 이미 있으면 추가하지 않고 실패(false) 반환
+        }
+
+        // 6개 제한 확인
         if (favorites.length >= 6) {
           return false;
         }
