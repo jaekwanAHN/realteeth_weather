@@ -28,7 +28,7 @@ export const FavoriteButton = ({ location }: FavoriteButtonProps) => {
 
   const handleToggle = () => {
     if (isActive) {
-      removeFavorite(location.name);
+      removeFavorite(location.lat, location.lon);
       setIsActive(false);
     } else {
       addFavorite(location);

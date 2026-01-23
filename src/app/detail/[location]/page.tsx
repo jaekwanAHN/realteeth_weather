@@ -9,17 +9,36 @@ interface DetailPageProps {
   params: Promise<{
     location: string;
   }>;
+  searchParams: Promise<{
+    lat?: string;
+    lon?: string;
+  }>;
 }
 
-export default async function DetailPage({ params }: DetailPageProps) {
+export default async function DetailPage({
+  params,
+  searchParams,
+}: DetailPageProps) {
   const { location } = await params;
+  const { lat, lon } = await searchParams;
+
   const locationName = decodeURIComponent(location);
 
   if (!locationName) return notFound();
 
-  // 1. 좌표 구하기 (Geocoding)
-  const searchKeyword = locationName.replaceAll('-', ' ');
-  const geoData = await getGeoLocation(searchKeyword);
+  let geoData = null;
+
+  if (lat && lon) {
+    geoData = {
+      name: locationName,
+      lat: parseFloat(lat),
+      lon: parseFloat(lon),
+      country: 'KR',
+    };
+  } else {
+    const searchKeyword = locationName.replaceAll('-', ' ');
+    geoData = await getGeoLocation(searchKeyword);
+  }
 
   if (!geoData) {
     return (
@@ -35,13 +54,6 @@ export default async function DetailPage({ params }: DetailPageProps) {
     geoData.lat,
     geoData.lon
   );
-
-  // 3. 서버 로그 확인 (데이터 구조 파악용)
-  console.log(weatherData);
-  console.log(`\n--- [Weather Data] ---`);
-  console.log(`Temp : ${weatherData?.main.temp}°C`);
-  console.log(`Desc : ${weatherData?.weather[0].description}`);
-  console.log(`----------------------\n`);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-blue-50 p-8">

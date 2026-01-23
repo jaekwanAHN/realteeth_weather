@@ -11,8 +11,9 @@ export interface FavoriteLocation {
 interface FavoriteStore {
   favorites: FavoriteLocation[];
   addFavorite: (location: FavoriteLocation) => void;
-  removeFavorite: (name: string) => void;
+  removeFavorite: (lat: number, lon: number) => void;
   isFavorite: (name: string) => boolean;
+  updateFavoriteName: (lat: number, lon: number, newName: string) => void;
 }
 
 // 2. 스토어 생성 (persist 미들웨어로 로컬스토리지 자동 저장)
@@ -30,15 +31,26 @@ export const useFavoriteStore = create<FavoriteStore>()(
           return { favorites: [...state.favorites, location] };
         }),
 
-      removeFavorite: (name) =>
+      removeFavorite: (lat, lon) =>
         set((state) => ({
-          favorites: state.favorites.filter((fav) => fav.name !== name),
+          favorites: state.favorites.filter(
+            (fav) => fav.lat !== lat || fav.lon !== lon
+          ),
         })),
 
       // 특정 지역이 즐겨찾기에 있는지 확인
       isFavorite: (name) => {
         return get().favorites.some((fav) => fav.name === name);
       },
+
+      updateFavoriteName: (lat, lon, newName) =>
+        set((state) => ({
+          favorites: state.favorites.map((fav) =>
+            fav.lat === lat && fav.lon === lon
+              ? { ...fav, name: newName } // 이름 변경
+              : fav
+          ),
+        })),
     }),
     {
       name: 'weather-favorites', // 로컬스토리지에 저장될 키 이름
