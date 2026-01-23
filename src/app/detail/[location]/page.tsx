@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getGeoLocation } from '@/entities/location/api/geocode';
+import { getGeoLocationAction } from '@/entities/location/api/locationAction';
 import { HourlyForecast } from '@/widgets/WeatherForcast/ui/HourlyForecast';
 import { getCurrentWeatherAction } from '@/entities/weather/api/weatherAction';
 import { CurrentWeatherCard } from '@/widgets/CurrentWeather/ui/CurrentWeatherCard';
@@ -37,7 +37,10 @@ export default async function DetailPage({
     };
   } else {
     const searchKeyword = locationName.replaceAll('-', ' ');
-    geoData = await getGeoLocation(searchKeyword);
+    const { success, data } = await getGeoLocationAction(searchKeyword);
+    if (success && data) {
+      geoData = data;
+    }
   }
 
   if (!geoData) {

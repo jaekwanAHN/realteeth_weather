@@ -13,6 +13,6 @@ export const weatherApi = axios.create({
 export const kakaoApi = axios.create({
   baseURL: 'https://dapi.kakao.com/v2/local',
   headers: {
-    Authorization: `KakaoAK ${process.env.NEXT_PUBLIC_KAKAO_API_KEY}`,
+    Authorization: `KakaoAK ${process.env.KAKAO_API_KEY}`,
   },
 });
