@@ -1,9 +1,9 @@
-import { notFound } from 'next/navigation';
-import { getGeoLocationAction } from '@/entities/location/api/locationAction';
-import { HourlyForecast } from '@/widgets/WeatherForcast/ui/HourlyForecast';
+import { resolveGeoData } from '@/entities/location/lib/resolveGeoData';
 import { getCurrentWeatherAction } from '@/entities/weather/api/weatherAction';
 import { CurrentWeatherCard } from '@/widgets/CurrentWeather/ui/CurrentWeatherCard';
-import { FavoriteButton } from '@/features/toggle-favorite/ui/FavoriteButton';
+import { DetailHeader } from '@/widgets/DetailHeader/DetailHeader';
+import { HourlyForecast } from '@/widgets/WeatherForcast/ui/HourlyForecast';
+import { notFound } from 'next/navigation';
 
 interface DetailPageProps {
   params: Promise<{
@@ -21,105 +21,38 @@ export default async function DetailPage({
 }: DetailPageProps) {
   const { location } = await params;
   const { lat, lon } = await searchParams;
-
   const locationName = decodeURIComponent(location);
 
-  if (!locationName) return notFound();
+  const geoData = await resolveGeoData(locationName, lat, lon);
 
-  let geoData = null;
-
-  if (lat && lon) {
-    geoData = {
-      name: locationName,
-      lat: parseFloat(lat),
-      lon: parseFloat(lon),
-      country: 'KR',
-    };
-  } else {
-    const searchKeyword = locationName.replaceAll('-', ' ');
-    const { success, data } = await getGeoLocationAction(searchKeyword);
-    if (success && data) {
-      geoData = data;
-    }
-  }
-
-  if (!geoData) {
-    return (
-      <main className="flex min-h-screen flex-col items-center justify-center bg-slate-50 p-8">
-        <div className="font-bold text-red-500">
-          해당 장소의 정보가 제공되지 않습니다.
-        </div>
-      </main>
-    );
-  }
+  if (!geoData) notFound();
 
   const { success, data } = await getCurrentWeatherAction(
     geoData.lat,
     geoData.lon
   );
+
   if (!success || !data) {
-    return (
-      <main className="flex min-h-screen items-center justify-center p-8">
-        <div className="text-center">
-          <h2 className="mb-2 text-xl font-bold text-gray-500">
-            날씨 정보를 불러올 수 없습니다.
-          </h2>
-          <p className="text-gray-400">잠시 후 다시 시도해주세요.</p>
-        </div>
-      </main>
-    );
+    throw new Error('날씨 정보를 불러오는데 실패했습니다.');
   }
   const { weather: weatherData, forecast: forecastData } = data;
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-blue-50 p-8">
       <div className="w-full max-w-2xl space-y-8">
-        {/* 헤더 영역: 지역명 + 즐겨찾기 버튼 */}
-        <div className="flex items-center justify-between px-4">
-          {/* 뒤로가기 버튼 */}
-          <a
-            href="/"
-            className="text-gray-500 transition-colors hover:text-gray-800"
-          >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M10 19l-7-7m0 0l7-7m-7 7h18"
-              />
-            </svg>
-          </a>
-
-          {/* 즐겨찾기 버튼 (위치 정보 전달) */}
-          <FavoriteButton
-            location={{
-              name: locationName,
-              lat: geoData.lat,
-              lon: geoData.lon,
-            }}
-          />
-        </div>
-
+        <DetailHeader
+          locationName={locationName}
+          lat={geoData.lat}
+          lon={geoData.lon}
+        />
         {weatherData ? (
-          <CurrentWeatherCard
-            data={weatherData}
-            locationName={locationName} // 페이지 제목 역할도 위젯에게 위임
-          />
+          <CurrentWeatherCard data={weatherData} locationName={locationName} />
         ) : (
           <div className="py-10 text-center text-red-500">
             날씨 정보를 불러오는데 실패했습니다.
           </div>
         )}
-
-        {/* 시간대별 예보 위젯 */}
         {forecastData && <HourlyForecast data={forecastData} />}
-
         <div className="mt-8 text-center">
           <a href="/" className="text-sm text-gray-500 hover:underline">
             ← 다른 지역 검색하기
