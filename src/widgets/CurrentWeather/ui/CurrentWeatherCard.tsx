@@ -23,7 +23,7 @@ export const CurrentWeatherCard = ({
         {/* 메인 아이콘 & 온도 */}
         <div className="flex flex-col items-center justify-center">
           <img
-            src={`${API_URLS.OPEN_WEATHER}/img/wn/${data.weather[0].icon}@4x.png`}
+            src={`${API_URLS.OPEN_WEATHER_IMG}/img/wn/${data.weather[0].icon}@4x.png`}
             alt={data.weather[0].description}
             className="h-32 w-32 drop-shadow-md"
           />

@@ -86,7 +86,7 @@ export const FavoriteItem = ({ item }: Props) => {
                 <>
                   <div className="relative h-6 w-6">
                     <Image
-                      src={`${API_URLS.OPEN_WEATHER}/img/wn/${weather.icon}.png`}
+                      src={`${API_URLS.OPEN_WEATHER_IMG}/img/wn/${weather.icon}.png`}
                       alt={weather.description}
                       fill
                       sizes="24px"
