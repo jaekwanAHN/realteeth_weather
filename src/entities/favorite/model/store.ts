@@ -10,9 +10,9 @@ export interface FavoriteLocation {
 
 interface FavoriteStore {
   favorites: FavoriteLocation[];
-  addFavorite: (location: FavoriteLocation) => void;
+  addFavorite: (location: FavoriteLocation) => boolean;
   removeFavorite: (lat: number, lon: number) => void;
-  isFavorite: (name: string) => boolean;
+  isFavorite: (lat: number, lon: number) => boolean;
   updateFavoriteName: (lat: number, lon: number, newName: string) => void;
 }
 
@@ -22,14 +22,17 @@ export const useFavoriteStore = create<FavoriteStore>()(
     (set, get) => ({
       favorites: [],
 
-      addFavorite: (location) =>
-        set((state) => {
-          // 중복 방지
-          if (state.favorites.some((fav) => fav.name === location.name)) {
-            return state;
-          }
-          return { favorites: [...state.favorites, location] };
-        }),
+      addFavorite: (location) => {
+        const { favorites } = get();
+
+        if (favorites.length >= 6) {
+          return false;
+        }
+
+        // 2. 아니면 추가하고 성공(true) 반환
+        set((state) => ({ favorites: [...state.favorites, location] }));
+        return true;
+      },
 
       removeFavorite: (lat, lon) =>
         set((state) => ({
@@ -39,8 +42,10 @@ export const useFavoriteStore = create<FavoriteStore>()(
         })),
 
       // 특정 지역이 즐겨찾기에 있는지 확인
-      isFavorite: (name) => {
-        return get().favorites.some((fav) => fav.name === name);
+      isFavorite: (lat, lon) => {
+        return get().favorites.some(
+          (fav) => fav.lat === lat && fav.lon === lon
+        );
       },
 
       updateFavoriteName: (lat, lon, newName) =>
