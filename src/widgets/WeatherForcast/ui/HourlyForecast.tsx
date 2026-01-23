@@ -1,4 +1,5 @@
 import { ForecastData } from '@/entities/weather/model/types';
+import { API_URLS } from '@/shared/config/constants';
 
 interface HourlyForecastProps {
   data: ForecastData;
@@ -34,7 +35,7 @@ export const HourlyForecast = ({ data }: HourlyForecastProps) => {
 
             {/* 아이콘 */}
             <img
-              src={`https://openweathermap.org/img/wn/${item.weather[0].icon}.png`}
+              src={`${API_URLS.OPEN_WEATHER}/img/wn/${item.weather[0].icon}.png`}
               alt={item.weather[0].main}
               className="mb-1 h-10 w-10"
             />

@@ -1,8 +1,8 @@
 import axios from 'axios';
+import { API_URLS } from '@/shared/config/constants';
 
-// Todo. baseURl 환경변수처리
 export const weatherApi = axios.create({
-  baseURL: 'https://api.openweathermap.org',
+  baseURL: API_URLS.OPEN_WEATHER,
   params: {
     appid: process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY,
     lang: 'kr',
@@ -11,7 +11,7 @@ export const weatherApi = axios.create({
 });
 
 export const kakaoApi = axios.create({
-  baseURL: 'https://dapi.kakao.com/v2/local',
+  baseURL: API_URLS.KAKAO,
   headers: {
     Authorization: `KakaoAK ${process.env.KAKAO_API_KEY}`,
   },
