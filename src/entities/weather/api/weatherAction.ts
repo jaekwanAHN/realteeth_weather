@@ -1,8 +1,7 @@
-'use server'; // 👈 이 함수는 무조건 서버에서만 실행됩니다!
+'use server';
 
-import axios from 'axios';
+import { weatherApi } from '@/shared/api/base';
 
-// 클라이언트로 보낼 데이터 타입 정의
 interface WeatherResponse {
   success: boolean;
   data?: {
@@ -28,18 +27,15 @@ export const getSimpleWeatherAction = async (
       return { success: false, error: 'Server Configuration Error' };
     }
 
-    const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather`,
-      {
-        params: {
-          lat,
-          lon,
-          appid: apiKey,
-          units: 'metric',
-          lang: 'kr',
-        },
-      }
-    );
+    const response = await weatherApi.get(`/data/2.5/weather`, {
+      params: {
+        lat,
+        lon,
+        appid: apiKey,
+        units: 'metric',
+        lang: 'kr',
+      },
+    });
 
     const { main, weather } = response.data;
 
@@ -68,21 +64,13 @@ export const getCurrentWeatherAction = async (lat: number, lon: number) => {
       throw new Error('API Key is missing on server');
     }
 
-    // 1. 현재 날씨 요청
-    const weatherPromise = axios.get(
-      `https://api.openweathermap.org/data/2.5/weather`,
-      {
-        params: { lat, lon, appid: apiKey, units: 'metric', lang: 'kr' },
-      }
-    );
+    const weatherPromise = weatherApi.get(`/data/2.5/weather`, {
+      params: { lat, lon, appid: apiKey, units: 'metric', lang: 'kr' },
+    });
 
-    // 2. 예보 요청 (5일/3시간)
-    const forecastPromise = axios.get(
-      `https://api.openweathermap.org/data/2.5/forecast`,
-      {
-        params: { lat, lon, appid: apiKey, units: 'metric', lang: 'kr' },
-      }
-    );
+    const forecastPromise = weatherApi.get(`/data/2.5/forecast`, {
+      params: { lat, lon, appid: apiKey, units: 'metric', lang: 'kr' },
+    });
 
     // 두 요청을 병렬로 동시에 실행 (속도 향상)
     const [weatherRes, forecastRes] = await Promise.all([
