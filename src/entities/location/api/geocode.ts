@@ -1,4 +1,4 @@
-import { kakaoApi } from '@/shared/api/base'; // weatherApi 대신 kakaoApi 사용
+import { kakaoApi } from '@/shared/api/base';
 import { GeoLocation } from '../model/types';
 
 // Kakao API 응답 타입 정의 (내부용)
@@ -57,14 +57,9 @@ export const getGeoLocation = async (
   }
 };
 
-// Reverse Geocoding도 Kakao로 바꾸면 더 정확한 "OO동" 이름을 얻을 수 있습니다.
-// (원하시면 이 부분도 코드를 드릴 수 있습니다. 일단은 위 함수가 급선무!)
 export const getReverseGeoLocation = async (
   lat: number,
   lon: number
 ): Promise<string | null> => {
-  // ... 기존 코드 유지 또는 Kakao로 변경 가능 ...
-  // 일단 기존 코드를 유지해도 기능상 문제는 없지만,
-  // 통일성을 위해 나중에 바꾸는 걸 추천합니다.
-  return null; // (임시, 기존 코드를 그대로 두세요)
+  return null;
 };

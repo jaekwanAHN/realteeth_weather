@@ -19,7 +19,7 @@ export const FavoriteButton = ({ location }: FavoriteButtonProps) => {
 
   // Zustand Store의 상태를 실시간으로 반영하기 위해 변수로 선언
   // (Store가 업데이트되면 컴포넌트가 리렌더링되면서 값을 다시 읽어옵니다)
-const isFav = isFavorite(location.lat, location.lon);
+  const isFav = isFavorite(location.lat, location.lon);
 
   useEffect(() => {
     setMounted(true);

@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react';
 import districtData from '@/shared/assets/data/korea_districts.json';
 
-
 type DistrictData = string[];
 
 export const useLocationSearch = () => {
@@ -10,7 +9,6 @@ export const useLocationSearch = () => {
 
   const searchResults = useMemo(() => {
     if (!searchTerm.trim()) return [];
-
 
     const data = districtData as DistrictData;
 
@@ -24,6 +22,6 @@ export const useLocationSearch = () => {
     setSearchTerm,
     searchResults,
     isFocused,
-    setIsFocused
+    setIsFocused,
   };
 };

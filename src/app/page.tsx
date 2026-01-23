@@ -1,4 +1,3 @@
-import { CurrentLocationButton } from '@/features/current-location/ui/CurrentLocationButton';
 import { MyLocationWeather } from '@/features/current-location/ui/MyLocationWeather';
 import { SearchSection } from '@/widgets/SearchSection/ui/SearchSection';
 import { FavoriteList } from '@/widgets/FavoriteList/ui/FavoriteList';

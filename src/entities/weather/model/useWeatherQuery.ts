@@ -3,7 +3,7 @@ import {
   getCurrentWeatherAction,
   getSimpleWeatherAction,
 } from '@/entities/weather/api/weatherAction';
-
+import { WEATHER_STALE_TIME, WEATHER_GC_TIME } from '@/shared/config/constants';
 import { CurrentWeatherData, SimpleWeatherData } from './types';
 
 export const useSimpleWeatherQuery = (lat: number, lon: number) => {
@@ -20,6 +20,8 @@ export const useSimpleWeatherQuery = (lat: number, lon: number) => {
 
       return result.data;
     },
+    staleTime: WEATHER_STALE_TIME,
+    gcTime: WEATHER_GC_TIME,
     enabled: !!lat && !!lon,
   });
 };
@@ -39,8 +41,10 @@ export const useCurrentWeatherQuery = (
         throw new Error(result.error || '날씨 정보를 가져올 수 없습니다.');
       }
 
-      return result.data; // { weather, forecast } 반환
+      return result.data;
     },
+    staleTime: WEATHER_STALE_TIME,
+    gcTime: WEATHER_GC_TIME,
     enabled: !!lat && !!lon,
   });
 };
