@@ -9,12 +9,8 @@ export default function Home() {
       <h1 className="mb-10 text-4xl font-extrabold tracking-tight text-blue-600">
         Weather App
       </h1>
-
-      {/* 위젯 배치 */}
       <SearchSection />
-
       <MyLocationWeather />
-
       <FavoriteList />
     </main>
   );

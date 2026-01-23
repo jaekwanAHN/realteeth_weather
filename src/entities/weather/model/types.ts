@@ -46,3 +46,17 @@ export interface ForecastData {
     country: string;
   };
 }
+
+export interface SimpleWeatherData  {
+  temp: number;
+  temp_min: number;
+  temp_max: number;
+  icon: string;
+  description: string;
+};
+
+// todo any Type 제거
+export interface CurrentWeatherData  {
+  weather: any; // 또는 WeatherData 타입으로 정의
+  forecast: any; // 또는 ForecastData 타입으로 정의
+};

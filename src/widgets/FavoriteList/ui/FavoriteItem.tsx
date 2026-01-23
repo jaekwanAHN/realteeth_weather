@@ -1,54 +1,27 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import Image from 'next/image'; // 이미지 최적화 사용
 import {
-  useFavoriteStore,
   FavoriteLocation,
+  useFavoriteStore,
 } from '@/entities/favorite/model/store';
-import { getSimpleWeather } from '@/entities/weather/api/getSimpleWeather';
-
-import { getSimpleWeatherAction } from '@/entities/weather/api/weatherAction';
+import Image from 'next/image'; // 이미지 최적화 사용
+import Link from 'next/link';
+import { useState } from 'react';
+import { useSimpleWeatherQuery } from '@/entities/weather/model/useWeatherQuery';
 
 interface Props {
   item: FavoriteLocation;
 }
 
-// 날씨 상태 타입 정의
-interface WeatherState {
-  temp: number;
-  min: number;
-  max: number;
-  icon: string;
-}
-
 export const FavoriteItem = ({ item }: Props) => {
   const { removeFavorite, updateFavoriteName } = useFavoriteStore();
-
-  // 상태 관리
   const [isEditing, setIsEditing] = useState(false);
   const [editName, setEditName] = useState(item.name);
-  const [weather, setWeather] = useState<WeatherState | null>(null); // 날씨 데이터
-
-  // 컴포넌트가 마운트되면 날씨 데이터를 가져옴
-  useEffect(() => {
-    const fetchWeather = async () => {
-      // const data = await getSimpleWeather(item.lat, item.lon);
-
-      const result = await getSimpleWeatherAction(item.lat, item.lon);
-
-      if (result.success && result.data) {
-        setWeather({
-          temp: result.data.temp,
-          min: result.data.temp_min,
-          max: result.data.temp_max,
-          icon: result.data.icon,
-        });
-      }
-    };
-    fetchWeather();
-  }, [item.lat, item.lon]); // 좌표가 바뀌면 다시 호출
+  const {
+    data: weather,
+    isLoading,
+    isError,
+  } = useSimpleWeatherQuery(item.lat, item.lon);
 
   const handleSave = () => {
     if (!editName.trim()) return;
@@ -95,40 +68,38 @@ export const FavoriteItem = ({ item }: Props) => {
           {/* 왼쪽: 지역 이름 클릭 영역 */}
           <Link
             href={`/detail/${encodeURIComponent(item.name)}?lat=${item.lat}&lon=${item.lon}`}
-            className="min-w-0 flex-1" // min-w-0은 말줄임표(...)를 위해 필수
+            className="min-w-0 flex-1"
           >
             <div className="truncate pr-2 font-semibold text-gray-800">
               {item.name}
             </div>
 
-            {/* 날씨 정보 표시 영역 */}
             <div className="mt-1 flex h-6 items-center gap-2 text-sm text-gray-600">
-              {weather ? (
+              {isLoading ? (
+                // 로딩 중 (스켈레톤)
+                <div className="h-4 w-24 animate-pulse rounded bg-gray-100" />
+              ) : isError || !weather ? (
+                // 에러 발생 시
+                <span className="text-xs text-red-400">날씨 정보 없음</span>
+              ) : (
                 <>
-                  {/* 날씨 아이콘 */}
                   <div className="relative h-6 w-6">
                     <Image
                       src={`https://openweathermap.org/img/wn/${weather.icon}.png`}
-                      alt="weather icon"
+                      alt={weather.description}
                       fill
                       sizes="24px"
                       className="object-contain"
                     />
                   </div>
-                  {/* 현재 기온 */}
                   <span className="font-bold text-black">{weather.temp}°</span>
-                  {/* 최저/최고 기온 */}
                   <span className="text-xs text-gray-400">
-                    ({weather.min}° / {weather.max}°)
+                    ({weather.temp_min}° / {weather.temp_max}°)
                   </span>
                 </>
-              ) : (
-                // 로딩 중일 때 스켈레톤 UI
-                <div className="h-4 w-24 animate-pulse rounded bg-gray-100" />
               )}
             </div>
           </Link>
-
           {/* 오른쪽: 수정/삭제 버튼 (마우스 오버 시 표시) */}
           <div className="absolute top-2 right-2 flex gap-1 rounded bg-white/80 p-0.5 opacity-0 shadow-sm backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <button
