@@ -68,7 +68,7 @@ export const FavoriteItem = ({ item }: Props) => {
             href={`/detail/${encodeURIComponent(item.name)}?lat=${item.lat}&lon=${item.lon}`}
             className="min-w-0 flex-1"
           >
-            <div className="truncate pr-2 font-semibold text-gray-800">
+            <div className="truncate pr-16 font-semibold text-gray-800 md:pr-2">
               {item.name}
             </div>
 
@@ -96,7 +96,7 @@ export const FavoriteItem = ({ item }: Props) => {
               )}
             </div>
           </Link>
-          <div className="absolute top-2 right-2 flex gap-1 rounded bg-white/80 p-0.5 opacity-0 shadow-sm backdrop-blur-sm transition-opacity group-hover:opacity-100">
+          <div className="absolute top-2 right-2 flex gap-1 rounded bg-white/80 p-0.5 opacity-100 shadow-sm backdrop-blur-sm transition-opacity md:opacity-0 md:group-hover:opacity-100">
             <button
               onClick={(e) => {
                 e.preventDefault();
