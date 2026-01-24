@@ -19,7 +19,6 @@ export const getSimpleWeatherAction = async (
   lon: number
 ): Promise<WeatherResponse> => {
   try {
-    // 서버 환경이므로 NEXT_PUBLIC 없이 바로 접근 가능
     const apiKey = process.env.OPENWEATHER_API_KEY;
 
     if (!apiKey) {
@@ -39,7 +38,6 @@ export const getSimpleWeatherAction = async (
 
     const { main, weather } = response.data;
 
-    // 필요한 데이터만 쏙 뽑아서 반환 (보안성 UP)
     return {
       success: true,
       data: {
@@ -58,7 +56,7 @@ export const getSimpleWeatherAction = async (
 
 export const getCurrentWeatherAction = async (lat: number, lon: number) => {
   try {
-    const apiKey = process.env.OPENWEATHER_API_KEY; // 서버 키 사용
+    const apiKey = process.env.OPENWEATHER_API_KEY;
 
     if (!apiKey) {
       throw new Error('API Key is missing on server');
@@ -72,7 +70,6 @@ export const getCurrentWeatherAction = async (lat: number, lon: number) => {
       params: { lat, lon, appid: apiKey, units: 'metric', lang: 'kr' },
     });
 
-    // 두 요청을 병렬로 동시에 실행 (속도 향상)
     const [weatherRes, forecastRes] = await Promise.all([
       weatherPromise,
       forecastPromise,

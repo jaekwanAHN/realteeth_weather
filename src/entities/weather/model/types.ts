@@ -17,8 +17,8 @@ export interface WeatherData {
     speed: number;
     deg: number;
   };
-  dt: number; // 데이터 수신 시간 (Unix Timestamp)
-  name: string; // 지역명
+  dt: number;
+  name: string;
 }
 
 export interface ForecastItem {
@@ -40,23 +40,23 @@ export interface ForecastItem {
 
 export interface ForecastData {
   cod: string;
-  list: ForecastItem[]; // 3시간 간격의 예보 리스트
+  list: ForecastItem[];
   city: {
     name: string;
     country: string;
   };
 }
 
-export interface SimpleWeatherData  {
+export interface SimpleWeatherData {
   temp: number;
   temp_min: number;
   temp_max: number;
   icon: string;
   description: string;
-};
+}
 
 // todo any Type 제거
-export interface CurrentWeatherData  {
-  weather: any; // 또는 WeatherData 타입으로 정의
-  forecast: any; // 또는 ForecastData 타입으로 정의
-};
+export interface CurrentWeatherData {
+  weather: any;
+  forecast: any;
+}

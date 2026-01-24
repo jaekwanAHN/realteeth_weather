@@ -9,7 +9,6 @@ interface DetailHeaderProps {
 export const DetailHeader = ({ locationName, lat, lon }: DetailHeaderProps) => {
   return (
     <div className="flex items-center justify-between px-4">
-      {/* 뒤로가기 버튼 */}
       <a
         href="/"
         className="text-gray-500 transition-colors hover:text-gray-800"
@@ -30,7 +29,6 @@ export const DetailHeader = ({ locationName, lat, lon }: DetailHeaderProps) => {
         </svg>
       </a>
 
-      {/* 즐겨찾기 버튼 */}
       <FavoriteButton
         location={{
           name: locationName,

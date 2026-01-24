@@ -34,8 +34,6 @@ export const MyLocationWeather = () => {
     coords?.lon ?? null
   );
 
-  // --- UI 렌더링 ---
-
   if (geoError) {
     return (
       <div className="flex justify-center p-8 text-red-500">{geoError}</div>
@@ -53,7 +51,6 @@ export const MyLocationWeather = () => {
     );
   }
 
-  // 3) API 에러 발생 시
   if (isError || !data) {
     return (
       <div className="flex justify-center p-8 text-gray-500">

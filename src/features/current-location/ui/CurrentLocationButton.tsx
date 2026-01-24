@@ -16,17 +16,14 @@ export const CurrentLocationButton = () => {
 
     setIsLoading(true);
 
-    // 1. 브라우저 GPS API 호출
     navigator.geolocation.getCurrentPosition(
       async (position) => {
         const { latitude, longitude } = position.coords;
 
         try {
-          // 2. 좌표 -> 주소 변환 (Server Action 호출)
           const locationName = await getLocationNameAction(latitude, longitude);
 
           if (locationName) {
-            // 3. 상세 페이지로 이동
             const encodedName = encodeURIComponent(locationName);
             router.push(`/detail/${encodedName}`);
           } else {
@@ -42,7 +39,6 @@ export const CurrentLocationButton = () => {
       (error) => {
         console.error('Geolocation Error:', error);
         setIsLoading(false);
-        // 권한 거부 등의 에러 처리
         switch (error.code) {
           case error.PERMISSION_DENIED:
             alert('위치 정보 제공을 허용해주세요.');
@@ -68,7 +64,6 @@ export const CurrentLocationButton = () => {
         <span>위치 확인 중...</span>
       ) : (
         <>
-          {/* 아이콘 (Heroicons 등) */}
           <svg
             className="h-4 w-4"
             fill="none"

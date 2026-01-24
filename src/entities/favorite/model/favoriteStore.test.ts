@@ -5,7 +5,7 @@ const initialState = useFavoriteStore.getState();
 describe('FavoriteStore Logic', () => {
   beforeEach(() => {
     useFavoriteStore.setState(initialState);
-    useFavoriteStore.getState().favorites = []; // 강제 초기화
+    useFavoriteStore.getState().favorites = [];
   });
   const SEOUL_LAT = 37.5;
   const SEOUL_LON = 127.0;
@@ -17,7 +17,7 @@ describe('FavoriteStore Logic', () => {
       lon: SEOUL_LON,
     });
 
-    expect(result).toBe(true); // 성공 반환
+    expect(result).toBe(true);
     expect(useFavoriteStore.getState().favorites).toHaveLength(1);
     expect(useFavoriteStore.getState().favorites[0].name).toBe('서울');
   });
@@ -39,24 +39,22 @@ describe('FavoriteStore Logic', () => {
   });
 
   test('즐겨찾기는 최대 6개까지만 저장되어야 한다', () => {
-    // 6개 꽉 채우기
     for (let i = 0; i < 6; i++) {
       useFavoriteStore.getState().addFavorite({
         name: `장소 ${i}`,
-        lat: SEOUL_LAT + i, // 좌표 다르게
+        lat: SEOUL_LAT + i,
         lon: SEOUL_LON,
       });
     }
 
-    // 7번째 추가 시도
     const result = useFavoriteStore.getState().addFavorite({
       name: '7번째 장소',
       lat: SEOUL_LAT + 1,
       lon: SEOUL_LON + 1,
     });
 
-    expect(result).toBe(false); // 실패 반환 확인
-    expect(useFavoriteStore.getState().favorites).toHaveLength(6); // 갯수 유지
+    expect(result).toBe(false);
+    expect(useFavoriteStore.getState().favorites).toHaveLength(6);
   });
 
   test('좌표를 기준으로 즐겨찾기 여부를 확인해야 한다', () => {

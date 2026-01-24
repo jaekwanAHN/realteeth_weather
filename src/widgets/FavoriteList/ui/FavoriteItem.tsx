@@ -4,7 +4,7 @@ import {
   FavoriteLocation,
   useFavoriteStore,
 } from '@/entities/favorite/model/store';
-import Image from 'next/image'; // 이미지 최적화 사용
+import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useSimpleWeatherQuery } from '@/entities/weather/model/useWeatherQuery';
@@ -40,7 +40,6 @@ export const FavoriteItem = ({ item }: Props) => {
   return (
     <li className="group relative mb-2 rounded-xl border border-gray-100 bg-white p-3 transition-all hover:shadow-md">
       {isEditing ? (
-        /* ✏️ 수정 모드 UI (기존 동일) */
         <div className="flex w-full items-center gap-2">
           <input
             type="text"
@@ -64,9 +63,7 @@ export const FavoriteItem = ({ item }: Props) => {
           </button>
         </div>
       ) : (
-        /* 👀 보기 모드 (날씨 정보 추가됨) */
         <div className="flex items-center justify-between">
-          {/* 왼쪽: 지역 이름 클릭 영역 */}
           <Link
             href={`/detail/${encodeURIComponent(item.name)}?lat=${item.lat}&lon=${item.lon}`}
             className="min-w-0 flex-1"
@@ -77,10 +74,8 @@ export const FavoriteItem = ({ item }: Props) => {
 
             <div className="mt-1 flex h-6 items-center gap-2 text-sm text-gray-600">
               {isLoading ? (
-                // 로딩 중 (스켈레톤)
                 <div className="h-4 w-24 animate-pulse rounded bg-gray-100" />
               ) : isError || !weather ? (
-                // 에러 발생 시
                 <span className="text-xs text-red-400">날씨 정보 없음</span>
               ) : (
                 <>
@@ -101,7 +96,6 @@ export const FavoriteItem = ({ item }: Props) => {
               )}
             </div>
           </Link>
-          {/* 오른쪽: 수정/삭제 버튼 (마우스 오버 시 표시) */}
           <div className="absolute top-2 right-2 flex gap-1 rounded bg-white/80 p-0.5 opacity-0 shadow-sm backdrop-blur-sm transition-opacity group-hover:opacity-100">
             <button
               onClick={(e) => {

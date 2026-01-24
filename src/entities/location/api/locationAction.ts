@@ -36,18 +36,17 @@ export const getGeoLocationAction = async (
     const documents = response.data.documents;
 
     if (!documents || documents.length === 0) {
-      return { success: true, data: null }; // 검색 결과 없음
+      return { success: true, data: null };
     }
 
-    // 첫 번째 검색 결과 사용
     const bestMatch = documents[0];
 
     return {
       success: true,
       data: {
-        name: query, // 검색어 그대로 사용 (또는 bestMatch.address_name)
-        lat: parseFloat(bestMatch.y), // Kakao는 y가 위도(lat)
-        lon: parseFloat(bestMatch.x), // Kakao는 x가 경도(lon)
+        name: query,
+        lat: parseFloat(bestMatch.y),
+        lon: parseFloat(bestMatch.x),
         country: 'KR',
       },
     };
