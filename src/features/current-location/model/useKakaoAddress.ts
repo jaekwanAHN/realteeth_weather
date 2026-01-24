@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getAddressAction } from '../api/getAddressAction';
+import { getAddressAction } from '@/features/current-location/api/getAddressAction';
 
 export const useKakaoAddress = (lat: number | null, lon: number | null) => {
   return useQuery({

@@ -14,7 +14,7 @@ export const CurrentWeatherCard = ({
     <div className="mx-auto min-h-[460px] w-full max-w-md rounded-3xl border border-white/50 bg-white p-8 text-center shadow-lg">
       <div className="space-y-6">
         {(locationName || data.name) && (
-          <h2 className="text-xl font-bold text-gray-700">
+          <h2 className="text-xl font-bold text-gray-700 transition-opacity duration-300">
             📍 {locationName || data.name}
           </h2>
         )}
