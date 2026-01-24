@@ -40,12 +40,12 @@ export const FavoriteItem = ({ item }: Props) => {
   return (
     <li className="group relative mb-2 rounded-xl border border-gray-100 bg-white p-3 transition-all hover:shadow-md">
       {isEditing ? (
-        <div className="flex w-full items-center gap-2">
+        <div className="flex h-[52px] w-full items-center gap-2">
           <input
             type="text"
             value={editName}
             onChange={(e) => setEditName(e.target.value)}
-            className="flex-1 rounded border px-2 py-1 text-sm outline-none focus:border-blue-500"
+            className="flex-1 rounded border px-2 py-1 text-sm text-black outline-none focus:border-blue-500"
             autoFocus
             onKeyDown={(e) => e.key === 'Enter' && handleSave()}
           />
