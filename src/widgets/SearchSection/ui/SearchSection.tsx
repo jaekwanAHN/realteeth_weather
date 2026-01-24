@@ -18,15 +18,11 @@ export const SearchSection = () => {
     }
   }, []);
 
-  useEffect(() => {
-    setActiveIndex(-1);
-  }, [searchTerm, searchResults.length]);
-
   const handleSelectLocation = (location: string) => {
     const encodedLocation = encodeURIComponent(location);
     router.push(`/detail/${encodedLocation}`);
   };
-  const { activeIndex, setActiveIndex, listRef, onKeyDown } =
+  const { activeIndex, setActiveIndex, listRef, onKeyDown, scrollRef } =
     useDropdownNavigation<string>({
       items: searchResults,
       isFocused,
@@ -55,7 +51,10 @@ export const SearchSection = () => {
           className="w-full text-black"
         />
         {isFocused && searchTerm && (
-          <div className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg">
+          <div
+            ref={scrollRef}
+            className="absolute z-10 mt-1 max-h-60 w-full overflow-y-auto rounded-md border border-gray-200 bg-white shadow-lg"
+          >
             {searchResults.length > 0 ? (
               <ul ref={listRef}>
                 {searchResults.map((location, index) => {
@@ -63,6 +62,7 @@ export const SearchSection = () => {
 
                   return (
                     <li
+                      data-idx={index}
                       key={`${location}-${index}`}
                       className={[
                         'cursor-pointer px-4 py-2 text-sm text-gray-700 transition-colors',

@@ -16,17 +16,34 @@ export function useDropdownNavigation<T>({
   onSelect,
 }: Params<T>) {
   const [activeIndex, setActiveIndex] = useState(-1);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
 
   useEffect(() => {
     setActiveIndex(-1);
   }, [searchTerm, items.length]);
 
-  const scrollIntoView = (index: number) => {
+  const ensureVisible = (index: number) => {
+    const container = scrollRef.current;
     const ul = listRef.current;
-    if (!ul) return;
-    const el = ul.querySelector<HTMLLIElement>(`li[data-idx="${index}"]`);
-    el?.scrollIntoView({ block: 'nearest' });
+    if (!container || !ul) return;
+
+    const item = ul.querySelector<HTMLLIElement>(`li[data-idx="${index}"]`);
+    if (!item) return;
+
+    const itemTop = item.offsetTop;
+    const itemBottom = itemTop + item.offsetHeight;
+
+    const viewTop = container.scrollTop;
+    const viewBottom = viewTop + container.clientHeight;
+
+    if (itemTop < viewTop) {
+      container.scrollTop = itemTop;
+      return;
+    }
+    if (itemBottom > viewBottom) {
+      container.scrollTop = itemBottom - container.clientHeight;
+    }
   };
 
   const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -41,7 +58,7 @@ export function useDropdownNavigation<T>({
       e.preventDefault();
       const next = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
       setActiveIndex(next);
-      scrollIntoView(next);
+      requestAnimationFrame(() => ensureVisible(next));
       return;
     }
 
@@ -49,7 +66,7 @@ export function useDropdownNavigation<T>({
       e.preventDefault();
       const prev = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
       setActiveIndex(prev);
-      scrollIntoView(prev);
+      requestAnimationFrame(() => ensureVisible(prev));
       return;
     }
 
@@ -68,5 +85,5 @@ export function useDropdownNavigation<T>({
     }
   };
 
-  return { activeIndex, setActiveIndex, listRef, onKeyDown };
+  return { activeIndex, setActiveIndex, listRef, onKeyDown, scrollRef };
 }
