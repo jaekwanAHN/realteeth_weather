@@ -52,10 +52,3 @@ export const getGeoLocation = async (
     return null;
   }
 };
-
-export const getReverseGeoLocation = async (
-  lat: number,
-  lon: number
-): Promise<string | null> => {
-  return null;
-};
