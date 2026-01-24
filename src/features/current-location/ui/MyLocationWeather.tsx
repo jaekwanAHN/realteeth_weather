@@ -4,11 +4,17 @@ import { useCurrentWeatherQuery } from '@/entities/weather/model/useWeatherQuery
 import { CurrentWeatherCard } from '@/widgets/CurrentWeather/ui/CurrentWeatherCard';
 import { CurrentWeatherSkeleton } from '@/widgets/CurrentWeather/ui/CurrentWeatherSkeleton';
 import { useGeolocation } from '@/features/current-location/model/useGeolocation';
+import { useKakaoAddress } from '@/features/current-location/model/useKakaoAddress';
 
 export const MyLocationWeather = () => {
   const { coords, error: geoError, isLoading: isGeoLoading } = useGeolocation();
 
   const { data, isLoading, isError } = useCurrentWeatherQuery(
+    coords?.lat ?? null,
+    coords?.lon ?? null
+  );
+
+  const { data: kakaoAddress } = useKakaoAddress(
     coords?.lat ?? null,
     coords?.lon ?? null
   );
@@ -42,8 +48,10 @@ export const MyLocationWeather = () => {
       </div>
     );
   } else {
+    const locationName = kakaoAddress ?? data.weather.name;
+
     content = (
-      <CurrentWeatherCard data={data.weather} locationName="현재 위치" />
+      <CurrentWeatherCard data={data.weather} locationName={locationName} />
     );
   }
 
