@@ -35,18 +35,37 @@ export const MyLocationWeather = () => {
     coords?.lon ?? null
   );
 
-  if (geoError) {
-    return (
-      <div className="flex justify-center p-8 text-red-500">{geoError}</div>
-    );
-  }
+  let content;
 
-  if (!coords) {
-    return (
-      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+  const emptyCardClass =
+    'mx-auto w-full max-w-md min-h-[460px] flex flex-col items-center justify-center gap-4 rounded-3xl border border-white/50 bg-white p-8 text-center shadow-lg';
+
+  if (geoError) {
+    content = (
+      <div className={emptyCardClass}>
+        <span className="text-red-500">{geoError}</span>
+      </div>
+    );
+  } else if (!coords) {
+    content = (
+      <div className={emptyCardClass}>
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-500" />
         <p className="text-gray-500">현재 위치를 찾는 중...</p>
       </div>
+    );
+  } else if (isLoading) {
+    content = <CurrentWeatherSkeleton />;
+  } else if (isError || !data) {
+    content = (
+      <div className={emptyCardClass}>
+        <span className="text-gray-500">
+          날씨 정보를 불러오는데 실패했습니다.
+        </span>
+      </div>
+    );
+  } else {
+    content = (
+      <CurrentWeatherCard data={data.weather} locationName="현재 위치" />
     );
   }
 
@@ -55,15 +74,7 @@ export const MyLocationWeather = () => {
       <h3 className="mb-2 text-center text-sm font-medium text-gray-500">
         현재 내 위치
       </h3>
-      {isLoading ? (
-        <CurrentWeatherSkeleton />
-      ) : isError || !data ? (
-        <div className="flex justify-center p-8 text-gray-500">
-          날씨 정보를 불러오는데 실패했습니다.
-        </div>
-      ) : (
-        <CurrentWeatherCard data={data.weather} locationName="현재 위치" />
-      )}
+      {content}
     </div>
   );
 };
