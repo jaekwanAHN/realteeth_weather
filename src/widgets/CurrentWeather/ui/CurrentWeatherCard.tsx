@@ -11,7 +11,7 @@ export const CurrentWeatherCard = ({
   locationName,
 }: CurrentWeatherCardProps) => {
   return (
-    <div className="mx-auto w-full max-w-md rounded-3xl border border-white/50 bg-white p-8 text-center shadow-lg">
+    <div className="mx-auto min-h-[460px] w-full max-w-md rounded-3xl border border-white/50 bg-white p-8 text-center shadow-lg">
       <div className="space-y-6">
         {(locationName || data.name) && (
           <h2 className="text-xl font-bold text-gray-700">

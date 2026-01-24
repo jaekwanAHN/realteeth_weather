@@ -15,10 +15,12 @@ export const FavoriteList = () => {
   }
 
   return (
-    <ul className="max-h-60 space-y-1 overflow-y-auto p-2">
-      {favorites.map((fav) => (
-        <FavoriteItem key={`${fav.lat}-${fav.lon}`} item={fav} />
-      ))}
-    </ul>
+    <div className="mt-4 w-full max-w-md">
+      <ul className="max-h-60 space-y-1 overflow-y-auto p-2">
+        {favorites.map((fav) => (
+          <FavoriteItem key={`${fav.lat}-${fav.lon}`} item={fav} />
+        ))}
+      </ul>
+    </div>
   );
 };

@@ -2,6 +2,7 @@
 
 import { useCurrentWeatherQuery } from '@/entities/weather/model/useWeatherQuery';
 import { CurrentWeatherCard } from '@/widgets/CurrentWeather/ui/CurrentWeatherCard';
+import { CurrentWeatherSkeleton } from '@/widgets/CurrentWeather/ui/CurrentWeatherSkeleton';
 import { useEffect, useState } from 'react';
 
 export const MyLocationWeather = () => {
@@ -40,21 +41,11 @@ export const MyLocationWeather = () => {
     );
   }
 
-  if (!coords || isLoading) {
+  if (!coords) {
     return (
       <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-500" />
-        <p className="text-gray-500">
-          {!coords ? '현재 위치를 찾는 중...' : '날씨 정보를 불러오는 중...'}
-        </p>
-      </div>
-    );
-  }
-
-  if (isError || !data) {
-    return (
-      <div className="flex justify-center p-8 text-gray-500">
-        날씨 정보를 불러오는데 실패했습니다.
+        <p className="text-gray-500">현재 위치를 찾는 중...</p>
       </div>
     );
   }
@@ -64,7 +55,15 @@ export const MyLocationWeather = () => {
       <h3 className="mb-2 text-center text-sm font-medium text-gray-500">
         현재 내 위치
       </h3>
-      <CurrentWeatherCard data={data.weather} locationName="현재 위치" />
+      {isLoading ? (
+        <CurrentWeatherSkeleton />
+      ) : isError || !data ? (
+        <div className="flex justify-center p-8 text-gray-500">
+          날씨 정보를 불러오는데 실패했습니다.
+        </div>
+      ) : (
+        <CurrentWeatherCard data={data.weather} locationName="현재 위치" />
+      )}
     </div>
   );
 };
