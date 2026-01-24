@@ -3,32 +3,10 @@
 import { useCurrentWeatherQuery } from '@/entities/weather/model/useWeatherQuery';
 import { CurrentWeatherCard } from '@/widgets/CurrentWeather/ui/CurrentWeatherCard';
 import { CurrentWeatherSkeleton } from '@/widgets/CurrentWeather/ui/CurrentWeatherSkeleton';
-import { useEffect, useState } from 'react';
+import { useGeolocation } from '@/features/current-location/model/useGeolocation';
 
 export const MyLocationWeather = () => {
-  const [coords, setCoords] = useState<{ lat: number; lon: number } | null>(
-    null
-  );
-  const [geoError, setGeoError] = useState<string>('');
-
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      setGeoError('위치 정보를 사용할 수 없는 브라우저입니다.');
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setCoords({
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-        });
-      },
-      (err) => {
-        setGeoError('위치 권한을 허용해주세요. 😢');
-      }
-    );
-  }, []);
+  const { coords, error: geoError, isLoading: isGeoLoading } = useGeolocation();
 
   const { data, isLoading, isError } = useCurrentWeatherQuery(
     coords?.lat ?? null,
@@ -46,7 +24,7 @@ export const MyLocationWeather = () => {
         <span className="text-red-500">{geoError}</span>
       </div>
     );
-  } else if (!coords) {
+  } else if (isGeoLoading || !coords) {
     content = (
       <div className={emptyCardClass}>
         <div className="h-12 w-12 animate-spin rounded-full border-4 border-blue-200 border-t-blue-500" />
