@@ -3,7 +3,7 @@ import { API_URLS } from '@/shared/config/constants';
 
 interface CurrentWeatherCardProps {
   data: WeatherData;
-  locationName?: string;
+  locationName?: string | null;
 }
 
 export const CurrentWeatherCard = ({
@@ -13,11 +13,9 @@ export const CurrentWeatherCard = ({
   return (
     <div className="mx-auto min-h-[460px] w-full max-w-md rounded-3xl border border-white/50 bg-white p-8 text-center shadow-lg">
       <div className="space-y-6">
-        {(locationName || data.name) && (
-          <h2 className="text-xl font-bold text-gray-700 transition-opacity duration-300">
-            📍 {locationName || data.name}
-          </h2>
-        )}
+        <h2 className="h-[28px] text-xl font-bold text-gray-700">
+          {locationName}
+        </h2>
 
         <div className="flex flex-col items-center justify-center">
           <img

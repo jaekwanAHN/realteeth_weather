@@ -14,7 +14,6 @@ export async function getAddressAction(lat: number, lon: number) {
         y: lat,
       },
     });
-    console.log('data', data);
 
     if (data.documents && data.documents.length > 0) {
       const address = data.documents[0];

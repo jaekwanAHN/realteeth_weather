@@ -9,12 +9,12 @@ import { useKakaoAddress } from '@/features/current-location/model/useKakaoAddre
 export const MyLocationWeather = () => {
   const { coords, error: geoError, isLoading: isGeoLoading } = useGeolocation();
 
-  const { data, isLoading, isError } = useCurrentWeatherQuery(
+  const { data: weatherData, isLoading: isWeatherLoading, isError: isWeatherError } = useCurrentWeatherQuery(
     coords?.lat ?? null,
     coords?.lon ?? null
   );
 
-  const { data: kakaoAddress } = useKakaoAddress(
+  const { data: kakaoAddress, isLoading: isAddressLoading } = useKakaoAddress(
     coords?.lat ?? null,
     coords?.lon ?? null
   );
@@ -37,9 +37,9 @@ export const MyLocationWeather = () => {
         <p className="text-gray-500">현재 위치를 찾는 중...</p>
       </div>
     );
-  } else if (isLoading) {
+  } else if (isWeatherLoading || isAddressLoading) {
     content = <CurrentWeatherSkeleton />;
-  } else if (isError || !data) {
+  } else if (isWeatherError || !weatherData) {
     content = (
       <div className={emptyCardClass}>
         <span className="text-gray-500">
@@ -48,10 +48,10 @@ export const MyLocationWeather = () => {
       </div>
     );
   } else {
-    const locationName = kakaoAddress ?? data.weather.name;
+    const locationName = kakaoAddress || null;
 
     content = (
-      <CurrentWeatherCard data={data.weather} locationName={locationName} />
+      <CurrentWeatherCard data={weatherData.weather} locationName={locationName} />
     );
   }
 
