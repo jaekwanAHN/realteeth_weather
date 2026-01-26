@@ -55,7 +55,7 @@ export interface SimpleWeatherData {
   description: string;
 }
 
-// todo any Type 제거
+
 export interface CurrentWeatherData {
   weather: any;
   forecast: any;
